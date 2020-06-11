@@ -38,7 +38,7 @@ app.post('/remove', async (req, res) => {
     } else if (corpo.tipo == 'ppp_plano') {
         tipoCadastro = "/ppp/profile/remove";
     } else {
-        res.json({ Erro: "Tipo de consulta inválida" });
+      return  res.json({ Erro: "Tipo de consulta inválida" });
     }
 
     var device = new MikroNode(address);
@@ -96,7 +96,7 @@ app.post('/cadastro', async (req, res) => {
 });
 
 
-app.post('/consulta', async (req, res) => {
+app.get('/consulta', async (req, res) => {
     var corpo = req.body;
     var tipoConsulta = "";
     if (corpo.tipo == 'ppp_ativos') {
@@ -106,7 +106,7 @@ app.post('/consulta', async (req, res) => {
     } else if (corpo.tipo == 'interfaces') {
         tipoConsulta = "/interface/print";
     } else {
-        res.json({ Erro: "Tipo de consulta inválida" });
+       return res.json({ Erro: "Tipo de consulta inválida" });
     }
 
     var address = await getIp(req.body.ip);
