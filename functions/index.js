@@ -38,7 +38,7 @@ app.post('/remove', async (req, res) => {
     } else if (corpo.tipo == 'ppp_plano') {
         tipoCadastro = "/ppp/profile/remove";
     } else {
-      return  res.json({ Erro: "Tipo de consulta inválida" });
+      return  res.status(404).json({erro: "Tipo de consulta inválida"});
     }
 
     var device = new MikroNode(address);
@@ -49,12 +49,12 @@ app.post('/remove', async (req, res) => {
     }).then(function (conn) {
         var chan = conn.openChannel();
         return chan.write(tipoCadastro, { ".id": corpo.id }).then(data => {
-            return res.json(data.data);
+            return res.status(200).json(data.data);
         })
     }).catch(error => {
 
         console.log("Error result ", error);
-        return res.json({ error: error });
+        return res.status(500).json({ error: error });
     });
 
 });
@@ -71,7 +71,7 @@ app.post('/cadastro', async (req, res) => {
         }
 
     } else {
-        res.json({ Erro: "Tipo de consulta inválida" });
+        return  res.status(404).json({erro: "Tipo de consulta inválida"});
     }
 
     console.log('teste');
@@ -86,11 +86,11 @@ app.post('/cadastro', async (req, res) => {
         var chan = conn.openChannel();
 
         return chan.write(tipoCadastro, corpo.conteudo).then(data => {
-            return res.json("ok");
+            return  res.status(200).json({status: "Requisição ok"}); 
         });
 
     }).catch(error => {
-        return res.json({ erro: error });
+        return res.status(500).json({ error: error });
     });
 
 });
@@ -106,7 +106,7 @@ app.get('/consulta', async (req, res) => {
     } else if (corpo.tipo == 'interfaces') {
         tipoConsulta = "/interface/print";
     } else {
-       return res.json({ Erro: "Tipo de consulta inválida" });
+        return  res.status(404).json({erro: "Tipo de consulta inválida"});
     }
 
     var address = await getIp(req.body.ip);
@@ -121,17 +121,17 @@ app.get('/consulta', async (req, res) => {
 
         // get only a count of the addresses.
         return chan.write(tipoConsulta).then(data => {
-            console.log(data.data);
-            return res.json(castToJson(data.data));
+            console.log(data.data); 
+            return res.status(200).json(castToJson(data.data));
         }).catch(error => {
 
-            console.log("Error result ", error);
-            return res.json({ error: error });
+            console.log("Error result ", error); 
+            return res.status(500).json({ error: error });
         });
 
 
     }).catch(error => {
-        return res.json({ erro: error });
+        return res.status(500).json({ error: error }); 
     });
 
 });
